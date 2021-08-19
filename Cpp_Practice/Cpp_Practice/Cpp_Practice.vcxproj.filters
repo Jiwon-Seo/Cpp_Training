@@ -84,7 +84,22 @@
     <ClCompile Include="OOP03.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="OPP04.cpp">
+    <ClCompile Include="Exer07_1_1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Exer07_1_2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Exer07_2_1.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Exer07_2_2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="OOP05.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="OOP04.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
