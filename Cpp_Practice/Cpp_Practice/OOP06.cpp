@@ -12,6 +12,11 @@ void Acc_withdraw();
 const void Acc_showinfo();
 #endif
 
+enum GRADE
+{
+	A = 7, B = 4, C = 2
+};
+
 class Account
 {
 private:
@@ -30,7 +35,7 @@ public:
 		strcpy(name, ref.name);
 	}
 	int GetID() const { return id; }
-	void Deposit(int money)
+	virtual void Deposit(int money)
 	{
 		deposit += money;
 	}
@@ -52,7 +57,32 @@ public:
 		delete[] name;
 	}
 };
-
+class NormalAccount :public Account
+{
+private:
+	int rate;
+public:
+	NormalAccount(int id, char* name, int money, int interest) : Account(id, name, money), rate(interest)
+	{	}
+	virtual void Deposit(int money)
+	{
+		Account::Deposit(money);
+		Account::Deposit(money * (rate) / 100.0);
+	}
+};
+class HighCreditAccount :public NormalAccount
+{
+private:
+	int grade;
+public:
+	HighCreditAccount(int id, char* name, int money, int interest, int gr) :NormalAccount(id, name, money, interest), grade(gr)
+	{	}
+	virtual void Deposit(int money)
+	{
+		NormalAccount::Deposit(money);
+		Account::Deposit(money * (grade) / 100.0);
+	}
+};
 class AccountHandler
 {
 private:
@@ -68,9 +98,14 @@ public:
 	}
 	void Acc_Create()
 	{
-		char name[N_LEN];
-		int id, dep;
-
+		int accsel;
+		PrintMenuAccSel();
+		cin >> accsel;
+		if (accsel == 1)
+			Acc_Create_Normal();
+		else
+			Acc_Create_Credit();
+#if 0
 		cout << "[계좌개설]" << endl;
 		cout << "계좌ID: ";
 		cin >> id;
@@ -81,6 +116,7 @@ public:
 		AccArr[AccNum] = new Account(id, name, dep);
 		AccNum++;
 		cout << endl;
+#endif
 	}
 	void Acc_deposit()
 	{
@@ -123,14 +159,14 @@ public:
 			}
 		}
 	}
-	void Acc_showinfo() const
+	void Acc_showinfo()
 	{
 		for (int i = 0; i < AccNum; i++)
 		{
 			AccArr[i]->ShowAccInfo();
 		}
 	}
-	void PrintMenu() const
+	const void PrintMenu()
 	{
 		cout << "-----Menu------" << endl;
 		cout << "1. 계좌개설" << endl;
@@ -139,6 +175,67 @@ public:
 		cout << "4. 계좌정보 전체 출력" << endl;
 		cout << "5. 프로그램 종료" << endl;
 		cout << "선택: ";
+	}
+	const void PrintMenuAccSel()
+	{
+		cout << "[계좌종류선택]" << endl;
+		cout << "1.보통예금계좌 2.신용신뢰계좌" << endl;
+		cout << "선택: ";
+	}
+protected:
+	void Acc_Create_Normal()
+	{
+		int id;
+		char name[N_LEN];
+		int dep, rate;
+
+		cout << "[보통예금계좌 개설]" << endl;
+		cout << "계좌ID: ";
+		cin >> id;
+		cout << "이 름: ";
+		cin >> name;
+		cout << "입금액: ";
+		cin >> dep;
+		cout << "이자율: ";
+		cin >> rate;
+		AccArr[AccNum] = new NormalAccount(id, name, dep, rate);
+		AccNum++;
+		cout << endl;
+	}
+	void Acc_Create_Credit()
+	{
+		int id;
+		char name[N_LEN];
+		int dep, rate, grade;
+
+		cout << "[신용신뢰계좌 개설]" << endl;
+		cout << "계좌ID: ";
+		cin >> id;
+		cout << "이 름: ";
+		cin >> name;
+		cout << "입금액: ";
+		cin >> dep;
+		cout << "이자율: ";
+		cin >> rate;
+		cout << "신용등급(1toA, 2toB, 3toC): ";
+		cin >> grade;
+		switch (grade)
+		{
+		case 1:
+			AccArr[AccNum] = new HighCreditAccount(id, name, dep, rate, GRADE::A);
+			break;
+		case 2:
+			AccArr[AccNum] = new HighCreditAccount(id, name, dep, rate, GRADE::B);
+			break;
+		case 3:
+			AccArr[AccNum] = new HighCreditAccount(id, name, dep, rate, GRADE::C);
+			break;
+		default:
+			cout << "Err: invalid grade selection" << endl;
+			return;
+		}
+		AccNum++;
+		cout << endl;
 	}
 };
 
